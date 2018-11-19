@@ -14,11 +14,7 @@ end
 		  
 onion = { snd = 10, chop = { 1, 0, 1, 0, 1, 0, 1, 0}, texture = 1 } 
 
-level = {
-		[2] = onion,
-		[4] = onion,
-		[8] = onion
-}
+level = {}
 
 bpm = 120
 crochet = 60 / bpm
@@ -29,15 +25,28 @@ cur_note = 0
 playing = false
 
 function _init()
+		level = {
+    [2] = onion,
+    [4] = onion,
+    [8] = onion
+  }
 	 start_time = time()
 	 music(0)
 end
 
 x = 64  y = 64
 function _update()
+		local prev_note = cur_note
   cur = time() - start_time
   cur_beat = flr(cur / crochet)
-  cur_note = flr(cur / note_crochet)
+  cur_note = flr(cur / note_crochet) % 8
+  // if nothing is playing, or the new beat has started
+  if not playing or (prev_note == 7 and cur_note == 0) then
+  		if level[cur_beat] != nil then
+      sfx(level[cur_beat].snd, 2, 0, 8)
+      playing = true
+    end
+  end
 end
 
 function _draw()
