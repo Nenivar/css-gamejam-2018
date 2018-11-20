@@ -122,6 +122,10 @@ end
 
 function _draw()
 	cls()
+
+  -- map
+  map(0, 0, 0, 0, 16, 16)
+  
   local end_time = cur_time + ((bpm / 60) * 2)
   local end_beat = flr(end_time / crochet)
   local beat_offset = ((cur_time / crochet) - cur_beat)
