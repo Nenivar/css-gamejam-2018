@@ -20,13 +20,13 @@ level = {
   [5] = carrot,
   [6] = pepper,
   [7] = carrot,
-  [8] = carrot,
   [9] = pepper,
   [10] = pepper,
   [12] = onion,
   [13] = carrot,
   [15] = carrot,
-  [17] = pepper
+  [17] = pepper,
+  [18] = carrot
 }
 
 next_food = {}
@@ -75,7 +75,7 @@ function _update()
 
   local delta = abs((cur_time / note_crochet) - nearest_note)
   if btn(0) then
-    if not pressed and delta < 0.3 and level[cur_beat] and level[cur_beat].chop[cur_note] == 1 then
+    if not pressed and delta < 0.4 and level[cur_beat] and level[cur_beat].chop[cur_note] == 1 then
       score += 10
       pressed = true
     end
