@@ -13,22 +13,28 @@ function new_entityfood(food, x, y)
 end
 		  
 onion = { snd = 10, chop = { 1, 0, 1, 0, 1, 0, 1, 0}, texture = 1 } 
+carrot = { snd = 11, chop = { 1, 1, 1, 0, 1, 0, 1, 0}, texture = 5 }
+pepper = { snd = 12, chop = { 1, 0, 1, 0, 1, 1, 0, 1}, texture = 9 }
 
 level = {}
 
-bpm = 120
+bpm = 60
 crochet = 60 / bpm
-note_crochet = crochet / 4
+note_crochet = crochet / 8
 start_time = 0
+cur_time = 0
 cur_beat = 0
 cur_note = 0
 playing = false
 
 function _init()
-		level = {
-    [2] = onion,
-    [4] = onion,
-    [8] = onion
+  level = {
+    [1] = onion,
+    [2] = carrot,
+    [3] = onion,
+    [5] = carrot,
+    [6] = pepper,
+    [7] = carrot
   }
 	 start_time = time()
 	 music(0)
@@ -36,11 +42,11 @@ end
 
 x = 64  y = 64
 function _update()
-		local prev_note = cur_note
-  cur = time() - start_time
-  cur_beat = flr(cur / crochet)
-  cur_note = flr(cur / note_crochet) % 8
-  // if nothing is playing, or the new beat has started
+	 local prev_note = cur_note
+  cur_time = time() - start_time
+  cur_beat = flr(cur_time / crochet)
+  cur_note = flr(cur_time / note_crochet) % 8
+  -- if nothing is playing, or the new beat has started
   if not playing or (prev_note == 7 and cur_note == 0) then
   		if level[cur_beat] != nil then
       sfx(level[cur_beat].snd, 2, 0, 8)
@@ -49,9 +55,35 @@ function _update()
   end
 end
 
+t_x = 63
+t_y = 0
+t_w = 64
+t_h = 24
+b_sep = t_w / 16
+
 function _draw()
 	 cls()
-  print("beat: " .. cur_beat .. "\nnote: " .. cur_note, 0, 0)
+  local end_time = cur_time + ((bpm / 60) * 2)
+  local end_beat = flr(end_time / crochet)
+  local beat_offset = (((time() - start_time) / crochet) - cur_beat)
+  print("b_o: " .. beat_offset .. "\nbeat: " .. cur_beat .. "\nnote: " .. cur_note, 0, 0, 7)
+  for b = cur_beat, end_beat do
+    for n = 1, 8 do
+      if b != cur_beat or n > cur_note then
+        x = t_x - (beat_offset * 8 * b_sep) + (((n - 1) + ((b - cur_beat) * 8)) * b_sep)
+        y = t_y
+        h = t_h
+        c = 8
+        if level[b] == nil or level[b].chop[n] == 0 then
+          y = t_y + 2
+          h = h - 4
+          c = 6
+        end
+        line(x, y, x, y + h, c)
+      end
+    end
+  end
+  line(t_x, t_y, t_x, t_y + t_h, 3)
 end
 __gfx__
 00000000444444444444444444444444444444449999999999999999999999999999999988888888888888888888888888888888000000000000000000000000
