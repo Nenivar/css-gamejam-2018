@@ -58,26 +58,27 @@ end
 t_x = 63
 t_y = 0
 t_w = 64
-t_h = 24
+t_h = 20
 b_sep = t_w / 16
 
 function _draw()
-	 cls()
+	cls()
   local end_time = cur_time + ((bpm / 60) * 2)
   local end_beat = flr(end_time / crochet)
   local beat_offset = (((time() - start_time) / crochet) - cur_beat)
-  print("b_o: " .. beat_offset .. "\nbeat: " .. cur_beat .. "\nnote: " .. cur_note, 0, 0, 7)
+  print("b_o: " .. beat_offset .. "\nbeat: " .. cur_beat .. "\nnote: " .. cur_note, 0, 127 - 18, 7)
+
   for b = cur_beat, end_beat do
     for n = 1, 8 do
       if b != cur_beat or n > cur_note then
-        x = t_x - (beat_offset * 8 * b_sep) + (((n - 1) + ((b - cur_beat) * 8)) * b_sep)
+        x = t_x - (beat_offset * 8 * b_sep) + ((n + ((b - cur_beat) * 8)) * b_sep)
         y = t_y
         h = t_h
-        c = 8
+        c = 12
         if level[b] == nil or level[b].chop[n] == 0 then
-          y = t_y + 2
-          h = h - 4
-          c = 6
+          y = t_y + 4
+          h = h - 8
+          c = 5
         end
         line(x, y, x, y + h, c)
       end
