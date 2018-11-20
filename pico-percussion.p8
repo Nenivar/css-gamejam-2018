@@ -6,13 +6,12 @@ function new_entityfood(food, x, y)
   ent.food = food
   ent.x = x
   ent.y = y
-  ent.progress = 0
   return ent
 end
 		  
-onion = { snd = 10, chop = { 1, 0, 1, 0, 1, 0, 1, 0}, texture = 1 } 
-carrot = { snd = 11, chop = { 1, 1, 1, 0, 1, 0, 1, 0}, texture = 5 }
-pepper = { snd = 12, chop = { 1, 0, 1, 0, 1, 1, 0, 1}, texture = 9 }
+onion = { snd = 10, chop = { 1, 0, 1, 0, 1, 0, 1, 0}, texture = 20 } 
+carrot = { snd = 11, chop = { 1, 1, 1, 0, 1, 0, 1, 0}, texture = 18 }
+pepper = { snd = 12, chop = { 1, 0, 1, 0, 1, 1, 0, 1}, texture = 16 }
 
 level = {
   [1] = onion,
@@ -48,9 +47,9 @@ function _init()
     local f = (i - 1) + cur_beat
     local x = (64 - 8) + ((i - 1) * 24)
     if level[f] then
-      next_food[i] = new_entityfood(level[f], x, 56)
+      next_food[i] = new_entityfood(level[f], x, 112)
     else
-      next_food[i] = new_entityfood({ texture = 0 }, x, 56)
+      next_food[i] = new_entityfood({ texture = 22 }, x, 112)
     end    
   end
   start_time = time()
@@ -79,7 +78,6 @@ function _update()
     if not pressed and delta < 0.3 and level[cur_beat] and level[cur_beat].chop[cur_note] == 1 then
       score += 10
       pressed = true
-      next_food[1].progress = (next_food[1].progress + 1) % 4
     end
   end
 
@@ -90,9 +88,9 @@ function _update()
     next_food[2].x = 80
     local f = cur_beat + 2
     if level[f] then
-      next_food[3] = new_entityfood(level[f], 104, 56)
+      next_food[3] = new_entityfood(level[f], 104, 112)
     else
-      next_food[3] = new_entityfood({ texture = 0 }, 104, 56)
+      next_food[3] = new_entityfood({ texture = 22 }, 104, 112)
     end    
   end
 end
@@ -117,7 +115,7 @@ end
 function drawnextfood() 
   for i = 1, 3 do
     if (next_food[i]) then
-      spr(next_food[i].food.texture + next_food[i].progress, next_food[i].x, next_food[i].y)
+      spr(next_food[i].food.texture, next_food[i].x, next_food[i].y, 2, 2)
     end
   end
 end
